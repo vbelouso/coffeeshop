@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -29,6 +31,22 @@ func getOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := writeJSON(w, http.StatusOK, envelope{"order": order}, nil)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+	}
+}
+
+func getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "not found", err)
+		return
+	}
+
+	customer, err := CustomerModel.Get(id)
+	err = writeJSON(w, http.StatusOK, envelope{"customer": customer}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
