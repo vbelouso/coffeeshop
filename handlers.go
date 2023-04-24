@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -38,35 +36,23 @@ func getOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func getCustomer(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "not found", err)
+		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return
 	}
-
 	if id < 1 {
-		fmt.Fprintf(os.Stderr, "not found", err)
+		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
+		return
+	}
+	c, err := getCustomerByID(id)
+
+	if err != nil {
+		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return
 	}
 
-	query := `
-	SELECT CUSTOMER_ID,
-	FULL_NAME,
-	CREATED_AT
-	FROM PUBLIC.CUSTOMERS
-	WHERE CUSTOMER_ID = $1;`
-
-	customer := &Customer{}
-
-	err = conn.QueryRow(context.Background(), query, id).Scan(
-		&customer.ID,
-		&customer.FullName,
-		&customer.Created)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-	}
-	err = writeJSON(w, http.StatusOK, envelope{"customer": customer}, nil)
+	err = writeJSON(w, http.StatusOK, envelope{"customer": c}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
