@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -9,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/jackc/pgx/v5"
 )
 
 const (
@@ -19,21 +17,6 @@ const (
 	password string = "coffeeshop"
 	dbname   string = "coffeeshop"
 )
-
-var conn *pgx.Conn
-
-func openDB(dsn string) error {
-	var err error
-	conn, err = pgx.Connect(context.Background(), dsn)
-	if err != nil {
-		return err
-	}
-
-	if err = conn.Ping(context.Background()); err != nil {
-		return err
-	}
-	return nil
-}
 
 func main() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
