@@ -1,18 +1,52 @@
 package main
 
 import (
-	"errors"
+	"context"
+	"fmt"
 	"time"
-)
 
-var (
-	ErrRecordNotFound = errors.New("record not found")
+	"github.com/jackc/pgx/v5"
 )
 
 type Customer struct {
 	ID       int       `json:"id,omitempty"`
 	FullName string    `json:"fullName,omitempty"`
 	Created  time.Time `json:"created,omitempty"`
+}
+
+var conn *pgx.Conn
+
+func openDB(dsn string) error {
+	var err error
+
+	conn, err = pgx.Connect(context.Background(), dsn)
+	if err != nil {
+		return err
+	}
+
+	return conn.Ping(context.Background())
+}
+
+func getCustomerByID(customerID int) (*Customer, error) {
+	stmt := `
+	SELECT CUSTOMER_ID,
+	FULL_NAME,
+	CREATED_AT
+	FROM PUBLIC.CUSTOMERS
+	WHERE CUSTOMER_ID = $1;`
+
+	customer := Customer{}
+	err := conn.QueryRow(context.Background(), stmt, customerID).Scan(
+		&customer.ID,
+		&customer.FullName,
+		&customer.Created,
+	)
+
+	if err != nil {
+		return &Customer{}, fmt.Errorf("failed to get item by ID: %w", err)
+	}
+
+	return &customer, nil
 }
 
 // type CustomerModel struct {
