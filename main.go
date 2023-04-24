@@ -20,16 +20,30 @@ const (
 	dbname   string = "coffeeshop"
 )
 
+var conn *pgx.Conn
+
+func openDB(dsn string) error {
+	var err error
+	conn, err = pgx.Connect(context.Background(), dsn)
+	if err != nil {
+		return err
+	}
+
+	if err = conn.Ping(context.Background()); err != nil {
+		return err
+	}
+	return nil
+}
+
 func main() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
-	conn, err := openDB(dsn)
-	if err != nil {
+	if err := openDB(dsn); err != nil {
 		log.Fatal(err)
 	}
 
-	defer conn.Close(context.Background())
+	// defer conn.Close(context.Background())
 
 	addr := flag.String("addr", ":8080", "HTTP network address")
 	flag.Parse()
@@ -50,17 +64,4 @@ func main() {
 	}
 	log.Printf("Starting server on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe(), router)
-}
-
-func openDB(dsn string) (*pgx.Conn, error) {
-	conn, err := pgx.Connect(context.Background(), dsn)
-	if err != nil {
-		return nil, err
-	}
-
-	if err = conn.Ping(context.Background()); err != nil {
-		return nil, err
-	}
-
-	return conn, nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -21,7 +22,6 @@ func getAllOrders(w http.ResponseWriter, r *http.Request) {
 func getOrder(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-
 	order := struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
@@ -45,7 +45,27 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	customer, err := CustomerModel.Get(id)
+	if id < 1 {
+		fmt.Fprintf(os.Stderr, "not found", err)
+		return
+	}
+
+	query := `
+	SELECT CUSTOMER_ID,
+	FULL_NAME,
+	CREATED_AT
+	FROM PUBLIC.CUSTOMERS
+	WHERE CUSTOMER_ID = $1;`
+
+	customer := &Customer{}
+
+	err = conn.QueryRow(context.Background(), query, id).Scan(
+		&customer.ID,
+		&customer.FullName,
+		&customer.Created)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+	}
 	err = writeJSON(w, http.StatusOK, envelope{"customer": customer}, nil)
 	if err != nil {
 		log.Println(err)
