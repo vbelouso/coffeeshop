@@ -14,6 +14,13 @@ type Customer struct {
 	Created  time.Time `json:"created,omitempty"`
 }
 
+type Order struct {
+	ID       int       `json:"id,omitempty"`
+	Customer string    `json:"customer,omitempty"`
+	Status   string    `json:"status,omitempty"`
+	Created  time.Time `json:"created,omitempty"`
+}
+
 var conn *pgx.Conn
 
 func openDB(dsn string) error {
@@ -47,6 +54,30 @@ func getCustomerByID(customerID int) (*Customer, error) {
 	}
 
 	return &customer, nil
+}
+
+func getOrderByID(orderID int) (*Order, error) {
+	stmt := `
+	SELECT ORDER_ID,
+	CUSTOMER_ID,
+	STATUS,
+	CREATED_AT
+	FROM PUBLIC.ORDERS
+	WHERE ORDER_ID = $1;`
+
+	order := Order{}
+	err := conn.QueryRow(context.Background(), stmt, orderID).Scan(
+		&order.ID,
+		&order.Customer,
+		&order.Status,
+		&order.Created,
+	)
+
+	if err != nil {
+		return &Order{}, fmt.Errorf("failed to get item by ID: %w", err)
+	}
+
+	return &order, nil
 }
 
 // type CustomerModel struct {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -26,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// defer conn.Close(context.Background())
+	defer conn.Close(context.Background())
 
 	addr := flag.String("addr", ":8080", "HTTP network address")
 	flag.Parse()
