@@ -57,3 +57,16 @@ VALUES
 ('8','Amy Adams',CURRENT_TIMESTAMP),
 ('9','Mark Taylor',CURRENT_TIMESTAMP),
 ('10','Emily Wilson',CURRENT_TIMESTAMP);
+
+
+INSERT INTO public.orders(order_id, customer_id, status, created_at)
+VALUES
+('1','1','New',CURRENT_TIMESTAMP),
+('2','2','In Progress',CURRENT_TIMESTAMP),
+('3','3','Out for Delivery',CURRENT_TIMESTAMP),
+('4','4','Ready',CURRENT_TIMESTAMP),
+('5','5','Ready for Pickup',CURRENT_TIMESTAMP),
+('6','6','Cancelled',CURRENT_TIMESTAMP),
+('7','7','On Hold',CURRENT_TIMESTAMP),
+('8','8','Completed',CURRENT_TIMESTAMP),
+('9','9','Refunded',CURRENT_TIMESTAMP);
