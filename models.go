@@ -42,7 +42,7 @@ func getCustomerByID(customerID int) (*Customer, error) {
 	FROM PUBLIC.CUSTOMERS
 	WHERE CUSTOMER_ID = $1;`
 
-	customer := Customer{}
+	customer := &Customer{}
 	err := conn.QueryRow(context.Background(), stmt, customerID).Scan(
 		&customer.ID,
 		&customer.FullName,
@@ -50,10 +50,10 @@ func getCustomerByID(customerID int) (*Customer, error) {
 	)
 
 	if err != nil {
-		return &Customer{}, fmt.Errorf("failed to get item by ID: %w", err)
+		return nil, fmt.Errorf("failed to get item by ID: %w", err)
 	}
 
-	return &customer, nil
+	return customer, nil
 }
 
 func getOrderByID(orderID int) (*Order, error) {
@@ -65,7 +65,7 @@ func getOrderByID(orderID int) (*Order, error) {
 	FROM PUBLIC.ORDERS
 	WHERE ORDER_ID = $1;`
 
-	order := Order{}
+	order := &Order{}
 	err := conn.QueryRow(context.Background(), stmt, orderID).Scan(
 		&order.ID,
 		&order.Customer,
@@ -74,10 +74,10 @@ func getOrderByID(orderID int) (*Order, error) {
 	)
 
 	if err != nil {
-		return &Order{}, fmt.Errorf("failed to get item by ID: %w", err)
+		return nil, fmt.Errorf("failed to get item by ID: %w", err)
 	}
 
-	return &order, nil
+	return order, nil
 }
 
 // type CustomerModel struct {
