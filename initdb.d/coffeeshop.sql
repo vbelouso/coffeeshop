@@ -44,3 +44,16 @@ CREATE TABLE IF NOT EXISTS public.orders_details
   CONSTRAINT order_id_fk FOREIGN KEY(order_id) REFERENCES public.orders(order_id),
   CONSTRAINT product_id_fk FOREIGN KEY(product_id) REFERENCES public.products(product_id)
 );
+
+INSERT INTO public.customers(customer_id, full_name, created_at)
+VALUES
+('1','John Smith', CURRENT_TIMESTAMP),
+('2','Jane Doe', CURRENT_TIMESTAMP),
+('3','Bob Johnson',CURRENT_TIMESTAMP),
+('4','Sara Lee',CURRENT_TIMESTAMP),
+('5','Mike Myers',CURRENT_TIMESTAMP),
+('6','Lisa Jones',CURRENT_TIMESTAMP),
+('7','David Brown',CURRENT_TIMESTAMP),
+('8','Amy Adams',CURRENT_TIMESTAMP),
+('9','Mark Taylor',CURRENT_TIMESTAMP),
+('10','Emily Wilson',CURRENT_TIMESTAMP);
