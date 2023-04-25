@@ -36,6 +36,7 @@ func main() {
 	router.HandleFunc("/", home).Methods(http.MethodGet)
 	router.HandleFunc("/orders", getAllOrders).Methods(http.MethodGet)
 	router.HandleFunc("/orders/{id:[0-9]+}", getOrder).Methods(http.MethodGet)
+	router.HandleFunc("/customers", getAllCustomers).Methods(http.MethodGet)
 	router.HandleFunc("/customers/{id:[0-9]+}", getCustomer).Methods(http.MethodGet)
 	http.Handle("/", router)
 

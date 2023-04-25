@@ -72,3 +72,16 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
 	}
 }
+
+func getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	c, err := getCustomers()
+	if err != nil {
+		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
+		return
+	}
+	err = writeJSON(w, http.StatusOK, envelope{"customers": c}, nil)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+	}
+}

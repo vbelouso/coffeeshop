@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -28,7 +29,8 @@ func openDB(dsn string) error {
 
 	conn, err = pgx.Connect(context.Background(), dsn)
 	if err != nil {
-		return err
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
 	}
 
 	return conn.Ping(context.Background())
@@ -54,6 +56,38 @@ func getCustomerByID(customerID int) (*Customer, error) {
 	}
 
 	return customer, nil
+}
+
+func getCustomers() ([]*Customer, error) {
+	stmt := `
+	SELECT CUSTOMER_ID,
+	FULL_NAME,
+	CREATED_AT
+	FROM PUBLIC.CUSTOMERS;`
+
+	rows, err := conn.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get customers: %w", err)
+	}
+
+	defer rows.Close()
+
+	customers := []*Customer{}
+	for rows.Next() {
+		c := &Customer{}
+		err = rows.Scan(
+			&c.ID,
+			&c.FullName,
+			&c.Created,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		customers = append(customers, c)
+	}
+
+	return customers, nil
 }
 
 func getOrderByID(orderID int) (*Order, error) {
