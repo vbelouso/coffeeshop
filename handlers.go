@@ -14,7 +14,16 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllOrders(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "get all orders")
+	o, err := getOrders()
+	if err != nil {
+		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
+		return
+	}
+	err = writeJSON(w, http.StatusOK, envelope{"orders": o}, nil)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+	}
 }
 
 func getOrder(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +38,6 @@ func getOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	o, err := getOrderByID(id)
-
 	if err != nil {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return
@@ -53,7 +61,6 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	c, err := getCustomerByID(id)
-
 	if err != nil {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return

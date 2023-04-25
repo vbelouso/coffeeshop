@@ -80,6 +80,38 @@ func getOrderByID(orderID int) (*Order, error) {
 	return order, nil
 }
 
+func getOrders() ([]*Order, error) {
+	stmt := `
+	SELECT ORDER_ID,
+	CUSTOMER_ID,
+	STATUS,
+	CREATED_AT
+	FROM PUBLIC.ORDERS;`
+
+	rows, err := conn.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get orders: %w", err)
+	}
+
+	defer rows.Close()
+
+	orders := []*Order{}
+
+	for rows.Next() {
+		o := &Order{}
+		err = rows.Scan(&o.ID, &o.Customer, &o.Status, &o.Created)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, o)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
 // type CustomerModel struct {
 // 	conn *pgx.Conn
 // }
