@@ -31,3 +31,7 @@ curl localhost:8080/customers/1
 ```shell
 curl localhost:8080/orders/1
 ```
+
+```shell
+curl localhost:8080/orders
+```
