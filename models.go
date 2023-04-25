@@ -72,7 +72,7 @@ func getCustomers() ([]*Customer, error) {
 
 	defer rows.Close()
 
-	customers := []*Customer{}
+	var customers []*Customer
 	for rows.Next() {
 		c := &Customer{}
 		err = rows.Scan(
@@ -129,7 +129,7 @@ func getOrders() ([]*Order, error) {
 
 	defer rows.Close()
 
-	orders := []*Order{}
+	var orders []*Order
 
 	for rows.Next() {
 		o := &Order{}

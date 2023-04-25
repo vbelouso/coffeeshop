@@ -29,6 +29,10 @@ curl localhost:8080/customers/1
 ```
 
 ```shell
+curl localhost:8080/customers
+```
+
+```shell
 curl localhost:8080/orders/1
 ```
 
@@ -36,6 +40,13 @@ curl localhost:8080/orders/1
 curl localhost:8080/orders
 ```
 
-```shell
-curl localhost:8080/customers
-```
+## Notes
+
+Dig into UUID usage instead of Integer for PGSQL
+DB Transactions?
+ConnectionPool
+
+## Improvements
+
+Reduce code repetition for errors(make constants/vars)
+Save only structs inside models.go
