@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.customers
 (
   customer_id serial8 NOT NULL,
-  full_name text,
+  full_name text NOT NULL,
   created_at timestamp not null DEFAULT now(),
   CONSTRAINT customer_id_pk PRIMARY KEY (customer_id)
 );
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.orders
 (
   order_id serial8 NOT NULL,
   customer_id serial8 NOT NULL,
-  status text,
+  status text NOT NULL,
   created_at timestamp not null DEFAULT now(),
   CONSTRAINT order_id_pk PRIMARY KEY (order_id),
   CONSTRAINT customer_id_fk FOREIGN KEY(customer_id) REFERENCES public.customers(customer_id)
@@ -23,9 +23,9 @@ CREATE UNIQUE INDEX order_id_uindex ON public.orders USING btree (order_id);
 CREATE TABLE IF NOT EXISTS public.products
 (
   product_id serial8 NOT NULL,
-  name text,
-  description text,
-  price real,
+  name text NOT NULL,
+  description text NOT NULL,
+  price real NOT NULL,
   CONSTRAINT product_id_pk PRIMARY KEY (product_id)
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.orders_details
 (
   order_id serial8 NOT NULL,
   product_id serial8 NOT NULL,
-  status text,
+  status text NOT NULL,
   created_at timestamp not null DEFAULT now(),
   CONSTRAINT orders_details_id_pk PRIMARY KEY (
     order_id,
