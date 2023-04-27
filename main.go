@@ -4,11 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/jackc/pgx/v5"
+	"github.com/vbelouso/coffeshop/db"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
 const (
@@ -19,34 +19,41 @@ const (
 	dbname   string = "coffeeshop"
 )
 
+type application struct {
+	q *db.Queries
+}
+
 func main() {
-	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	if err := openDB(dsn); err != nil {
+	ctx := context.Background()
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	conn, err := openDB(dsn)
+	if err != nil {
 		log.Fatal(err)
 	}
+	defer conn.Close(ctx)
 
-	defer conn.Close(context.Background())
-
+	queries := db.New(conn)
 	addr := flag.String("addr", ":8080", "HTTP network address")
 	flag.Parse()
 
-	router := mux.NewRouter()
-	router.HandleFunc("/", home).Methods(http.MethodGet)
-	router.HandleFunc("/orders", getAllOrders).Methods(http.MethodGet)
-	router.HandleFunc("/orders/{id:[0-9]+}", getOrder).Methods(http.MethodGet)
-	router.HandleFunc("/customers", getAllCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customers/{id:[0-9]+}", getCustomer).Methods(http.MethodGet)
-	http.Handle("/", router)
-
+	app := &application{q: queries}
 	srv := &http.Server{
 		Addr:         *addr,
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
-		Handler:      router,
+		Handler:      app.routes(),
 	}
 	log.Printf("Starting server on %s", srv.Addr)
-	log.Fatal(srv.ListenAndServe(), router)
+	log.Fatal(srv.ListenAndServe())
+}
+
+func openDB(dsn string) (*pgx.Conn, error) {
+	conn, err := pgx.Connect(context.Background(), dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return conn, conn.Ping(context.Background())
 }
