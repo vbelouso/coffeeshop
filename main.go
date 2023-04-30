@@ -16,6 +16,7 @@ type application struct {
 	c config
 }
 
+// Placeholder
 type config struct {
 	ServerPort string `env:"SERVER_HOST" envDefault:":8080"`
 	DBHost     string `env:"DB_HOST" envDefault:"localhost"`
