@@ -14,6 +14,6 @@ func (a *application) routes() *mux.Router {
 	router.HandleFunc("/customers", a.getAllCustomers).Methods(http.MethodGet)
 	router.HandleFunc("/customers/{id:[0-9]+}", a.getCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/healthz", a.healthzHandler).Methods(http.MethodGet)
-	http.Handle("/", router)
+
 	return router
 }
