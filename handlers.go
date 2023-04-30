@@ -78,3 +78,10 @@ func (a *application) getAllOrders(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
 	}
 }
+
+func (a *application) healthzHandler(w http.ResponseWriter, r *http.Request) {
+	js := `{"status": "available"}`
+	js = fmt.Sprintf(js)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(js))
+}
