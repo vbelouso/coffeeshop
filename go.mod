@@ -6,6 +6,7 @@ require (
 	github.com/caarlos0/env/v8 v8.0.0
 	github.com/gorilla/mux v1.8.0
 	github.com/jackc/pgx/v5 v5.3.1
+	github.com/joho/godotenv v1.5.1
 )
 
 require (
