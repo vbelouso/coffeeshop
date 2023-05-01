@@ -1,0 +1,79 @@
+basePath: /
+consumes:
+    - application/json
+definitions:
+    Customer:
+        properties:
+            createdAt:
+                format: date-time
+                type: string
+                x-go-name: CreatedAt
+            customerID:
+                description: the id for this user
+                format: int64
+                minimum: 1
+                type: integer
+                x-go-name: CustomerID
+            fullName:
+                type: string
+                x-go-name: FullName
+        required:
+            - customerID
+        type: object
+        x-go-package: github.com/vbelouso/coffeshop/db
+    InfinityModifier:
+        format: int8
+        type: integer
+        x-go-package: github.com/jackc/pgx/v5/pgtype
+    Timestamp:
+        properties:
+            InfinityModifier:
+                $ref: '#/definitions/InfinityModifier'
+            Time:
+                format: date-time
+                type: string
+            Valid:
+                type: boolean
+        title: Timestamp represents the PostgreSQL timestamp type.
+        type: object
+        x-go-package: github.com/jackc/pgx/v5/pgtype
+host: localhost:8080
+info:
+    contact:
+        email: john.doe@example.com
+        name: John Doe
+        url: http://john.doe.com
+    description: The following API provides simple implementation for managing orders and customers.
+    license:
+        name: MIT
+        url: http://opensource.org/licenses/MIT
+    termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
+    title: Coffeshop API.
+    version: 0.0.1
+paths:
+    /customers/{id}:
+        get:
+            description: Could be any customer
+            operationId: getCustomer
+            parameters:
+                - description: Customer ID to filter by
+                  format: int64
+                  in: path
+                  name: id
+                  required: true
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Customer'
+                        type: array
+            summary: Retrieves the details about customer.
+produces:
+    - application/json
+schemes:
+    - http
+swagger: "2.0"

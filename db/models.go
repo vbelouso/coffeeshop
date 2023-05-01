@@ -7,10 +7,16 @@ package db
 import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
-
+// swagger:model
 type Customer struct {
+	// the id for this user
+	//
+	// required: true
+	// min: 1
 	CustomerID int64            `json:"customerID"`
 	FullName   string           `json:"fullName"`
+	// returns the wrong data type (string) in the OpenAPI definitions.
+	// swagger:strfmt date-time
 	CreatedAt  pgtype.Timestamp `json:"createdAt"`
 }
 

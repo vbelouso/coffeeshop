@@ -13,7 +13,31 @@ func (a *application) home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "homepage")
 }
 
+// getCustomer return the customer from the coffeeshop store.
 func (a *application) getCustomer(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /customers/{id} getCustomer
+	//
+	// Retrieves the details about customer.
+	//
+	// Could be any customer
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: id
+	//   in: path
+	//   description: Customer ID to filter by
+	//   required: true
+	//   type: integer
+	//   format: int64
+	// responses:
+	//   '200':
+	//     description: Success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Customer"
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil || id < 1 {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
