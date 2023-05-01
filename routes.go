@@ -7,7 +7,6 @@ import (
 
 func (a *application) routes() *mux.Router {
 	router := mux.NewRouter()
-	router.Use()
 	router.HandleFunc("/", home).Methods(http.MethodGet)
 	router.HandleFunc("/orders", a.getAllOrders).Methods(http.MethodGet)
 	router.HandleFunc("/orders/{id:[0-9]+}", a.getOrder).Methods(http.MethodGet)
