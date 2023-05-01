@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
+func (a *application) home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "homepage")
 }
 
