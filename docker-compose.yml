@@ -11,5 +11,5 @@ services:
     volumes:
       - ./initdb.d/coffeeshop.sql:/docker-entrypoint-initdb.d/coffeeshop.sql
     ports:
-      - 5432:5432
+      - "5432:5432"
 
