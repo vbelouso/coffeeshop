@@ -19,17 +19,13 @@ type application struct {
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
 	cfg := InitializeConfig()
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
-
-	conn, err := openDB(dsn)
+	conn, err := openDB(cfg.DBDSN)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
 
-	//conn := openDB(dsn)
 	queries := db.New(conn)
-
 	app := &application{q: queries, c: cfg}
 	srv := &http.Server{
 		Addr:         cfg.ServerPort,
@@ -56,7 +52,7 @@ func openDB(dsn string) (*pgxpool.Pool, error) {
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 	defer pool.Close()
 	return pool, pool.Ping(ctx)
