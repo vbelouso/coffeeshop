@@ -5,6 +5,7 @@ definitions:
     Customer:
         properties:
             createdAt:
+                description: returns the wrong data type (string) in the OpenAPI definitions.
                 format: date-time
                 type: string
                 x-go-name: CreatedAt

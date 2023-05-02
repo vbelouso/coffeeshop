@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vbelouso/coffeshop/db"
+	"github.com/vbelouso/coffeshop/internal/config"
 	"log"
 	"net/http"
 	"os"
@@ -13,12 +14,12 @@ import (
 
 type application struct {
 	q *db.Queries
-	c *Config
+	c *config.Config
 }
 
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
-	cfg := InitializeConfig()
+	cfg := config.InitializeConfig()
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
 
 	conn, err := openDB(dsn)
@@ -56,7 +57,7 @@ func openDB(dsn string) (*pgxpool.Pool, error) {
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 	defer pool.Close()
 	return pool, pool.Ping(ctx)

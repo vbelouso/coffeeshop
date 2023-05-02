@@ -1,9 +1,10 @@
-package main
+package handlers
 
 import (
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/vbelouso/coffeshop/internal/helpers"
 	"log"
 	"net/http"
 	"strconv"
@@ -50,7 +51,7 @@ func (a *application) getCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeJSON(w, http.StatusOK, envelope{"customer": c}, nil)
+	err = helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"customer": c}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
@@ -63,7 +64,7 @@ func (a *application) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return
 	}
-	err = writeJSON(w, http.StatusOK, envelope{"customers": c}, nil)
+	err = helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"customers": c}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
@@ -83,7 +84,7 @@ func (a *application) getOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeJSON(w, http.StatusOK, envelope{"order": o}, nil)
+	err = helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"order": o}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
@@ -96,7 +97,7 @@ func (a *application) getAllOrders(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
 		return
 	}
-	err = writeJSON(w, http.StatusOK, envelope{"orders": c}, nil)
+	err = helpers.WriteJSON(w, http.StatusOK, helpers.Envelope{"orders": c}, nil)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
