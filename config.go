@@ -7,13 +7,9 @@ import (
 )
 
 type Config struct {
-	Environment string `env:"ENVIRONMENT" envDefault:"dev"`
+	Environment string `env:"ENVIRONMENT" envDefault:"local"`
 	ServerPort  string `env:"SERVER_PORT" envDefault:":8080"`
-	DBHost      string `env:"DB_HOST" envDefault:"localhost"`
-	DBPort      int    `env:"DB_PORT" envDefault:"5432"`
-	DBName      string `env:"DB_NAME" envDefault:"coffeeshop"`
-	DBUser      string `env:"DB_USER" envDefault:"postgres"`
-	DBPassword  string `env:"DB_PASSWORD" envDefault:"coffeeshop"`
+	DBDSN       string `env:"DB_DSN" envDefault:"host=localhost port=5432 user=postgres password=coffeeshop dbname=coffeeshop sslmode=disable"`
 }
 
 func InitializeConfig() *Config {
