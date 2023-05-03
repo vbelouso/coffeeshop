@@ -7,7 +7,6 @@ import (
 	"github.com/vbelouso/coffeshop/db"
 	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -49,11 +48,16 @@ func main() {
 
 func openDB(dsn string) (*pgxpool.Pool, error) {
 	ctx := context.Background()
-	pool, err := pgxpool.New(ctx, dsn)
+	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
 		return nil, err
 	}
+
+	pool, err := pgxpool.NewWithConfig(ctx, config)
+	if err != nil {
+		return nil, fmt.Errorf("database connection error: %w", err)
+	}
+
 	defer pool.Close()
 	return pool, pool.Ping(ctx)
 }
