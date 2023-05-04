@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/vbelouso/coffeshop/internal/config"
 	"github.com/vbelouso/coffeshop/internal/db"
 	"log"
 	"net/http"
@@ -12,12 +13,12 @@ import (
 
 type application struct {
 	q *db.Queries
-	c *Config
+	c *config.Config
 }
 
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
-	cfg := InitializeConfig()
+	cfg := config.InitializeConfig()
 	conn, err := openDB(cfg.DBDSN)
 	if err != nil {
 		log.Fatal(err)
