@@ -18,9 +18,15 @@ type application struct {
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
 	cfg := InitializeConfig()
+	//logger, err := ConfigureLogging(false)
+	//
+	//if err != nil {
+	//	logger.Fatal("unable to initialize logger", zap.Error(err))
+	//}
+
 	conn, err := openDB(cfg.DBDSN)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("unable to establish database connection", err)
 	}
 	defer conn.Close()
 
@@ -33,6 +39,7 @@ func main() {
 		IdleTimeout:  time.Second * 60,
 		Handler:      app.routes(),
 	}
+
 	log.Printf("Starting server on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
@@ -50,14 +57,18 @@ func openDB(dsn string) (*pgxpool.Pool, error) {
 	ctx := context.Background()
 	config, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse database configuration: %w", err)
 	}
 
 	pool, err := pgxpool.NewWithConfig(ctx, config)
 	if err != nil {
-		return nil, fmt.Errorf("database connection error: %w", err)
+		return nil, fmt.Errorf("failed to create database pool: %w", err)
 	}
 
-	defer pool.Close()
-	return pool, pool.Ping(ctx)
+	err = pool.Ping(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to establish database connection: %w", err)
+	}
+
+	return pool, nil
 }
