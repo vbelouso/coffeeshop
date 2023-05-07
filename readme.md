@@ -8,45 +8,22 @@
 
 `docker-compose` must be [installed](https://docs.docker.com/compose/install/)
 
-### Starting project
+## Working with project
 
-Start `db` service with the following command:
-
-```shell
-docker-compose up -d
-```
-
-Start API server
+### Start the project
 
 ```shell
-go run .
+make run
 ```
 
-Check API server
+### Stop the project
+
+TODO: Add the app to the docker-compose
+
+You need to stop docker-compose and kill the app
+
+### Check API server
 
 ```shell
-curl localhost:8080/customers/1
+make api_test
 ```
-
-```shell
-curl localhost:8080/customers
-```
-
-```shell
-curl localhost:8080/orders/1
-```
-
-```shell
-curl localhost:8080/orders
-```
-
-## Notes
-
-Dig into UUID usage instead of Integer for PGSQL
-DB Transactions?
-ConnectionPool
-
-## Improvements
-
-Reduce code repetition for errors(make constants/vars)
-Save only structs inside models.go
