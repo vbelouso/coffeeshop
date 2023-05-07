@@ -19,7 +19,7 @@ type application struct {
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
 	cfg := InitializeConfig()
-	InitAPM(cfg.SENTRY_DSN)
+	InitAPM(cfg.SentryDsn, cfg.Environment)
 	defer sentry.Flush(2 * time.Second)
 
 	//logger, err := ConfigureLogging(false)
@@ -28,7 +28,7 @@ func main() {
 	//	logger.Fatal("unable to initialize logger", zap.Error(err))
 	//}
 
-	conn, err := openDB(cfg.DBDSN)
+	conn, err := openDB(cfg.DbDSN)
 	if err != nil {
 		log.Fatal("unable to establish database connection", err)
 	}

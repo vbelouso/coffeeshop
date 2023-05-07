@@ -9,8 +9,8 @@ import (
 type Config struct {
 	Environment string `env:"ENVIRONMENT" envDefault:"local"`
 	ServerPort  string `env:"SERVER_PORT" envDefault:":8080"`
-	DBDSN       string `env:"DB_DSN" envDefault:"host=localhost port=5432 user=postgres password=coffeeshop dbname=coffeeshop sslmode=disable"`
-	SENTRY_DSN  string `env:"SENTRY_DSN,required"`
+	DbDSN       string `env:"DB_DSN" envDefault:"host=localhost port=5432 user=postgres password=coffeeshop dbname=coffeeshop sslmode=disable"`
+	SentryDsn   string `env:"SENTRY_DSN,required"`
 	//KEYCLOAK_RS256_PUBLIC_KEY string `env:"KEYCLOAK_RS256_PUBLIC_KEY,required"`
 }
 
