@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vbelouso/coffeshop/db"
 	"log"
@@ -18,6 +19,9 @@ type application struct {
 //go:generate swagger generate spec --scan-models -o docs/swagger.yaml
 func main() {
 	cfg := InitializeConfig()
+	InitAPM(cfg.SENTRY_DSN)
+	defer sentry.Flush(2 * time.Second)
+
 	//logger, err := ConfigureLogging(false)
 	//
 	//if err != nil {
