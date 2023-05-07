@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	sentryhttp "github.com/getsentry/sentry-go/http"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
 	"log"
@@ -147,4 +148,11 @@ func authMiddleware(next http.Handler) http.Handler {
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 	})
+}
+
+func apmMiddleware(next http.Handler) http.Handler {
+	return sentryhttp.New(sentryhttp.Options{
+		Repanic:         true,
+		WaitForDelivery: true,
+	}).Handle(next)
 }
