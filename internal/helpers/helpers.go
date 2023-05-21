@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"crypto/rsa"
@@ -9,9 +9,9 @@ import (
 	"net/http"
 )
 
-type envelope map[string]interface{}
+type Envelope map[string]interface{}
 
-func writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+func WriteJSON(w http.ResponseWriter, status int, data Envelope, headers http.Header) error {
 	payload, err := json.Marshal(data)
 	if err != nil {
 		return err

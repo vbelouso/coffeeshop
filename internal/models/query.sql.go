@@ -3,7 +3,7 @@
 //   sqlc v1.17.2
 // source: query.sql
 
-package db
+package models
 
 import (
 	"context"
@@ -26,7 +26,7 @@ SELECT order_id, customer_id, status, created_at FROM orders
 WHERE order_id = $1 LIMIT 1
 `
 
-func (q *Queries) GetOrder(ctx context.Context, orderID int64) (Order, error) {
+func (q *Queries) GetOrderByID(ctx context.Context, orderID int64) (Order, error) {
 	row := q.db.QueryRow(ctx, getOrder, orderID)
 	var i Order
 	err := row.Scan(

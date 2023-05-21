@@ -1,9 +1,10 @@
-package main
+package config
 
 import (
+	"log"
+
 	"github.com/caarlos0/env/v8"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 type Config struct {
@@ -11,7 +12,6 @@ type Config struct {
 	ServerPort  string `env:"SERVER_PORT" envDefault:":8080"`
 	DbDSN       string `env:"DB_DSN" envDefault:"host=localhost port=5432 user=postgres password=coffeeshop dbname=coffeeshop sslmode=disable"`
 	SentryDsn   string `env:"SENTRY_DSN,required"`
-	//KEYCLOAK_RS256_PUBLIC_KEY string `env:"KEYCLOAK_RS256_PUBLIC_KEY,required"`
 }
 
 func InitializeConfig() *Config {
