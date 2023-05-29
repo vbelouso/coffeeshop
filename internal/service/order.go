@@ -12,17 +12,20 @@ var (
 	ErrOrderNotFound = errors.New("the order cannot be found")
 )
 
-type OrderService struct {
+type OrderService interface {
+	GetOrderByID(id int) (models.Order, error)
+}
+type orderService struct {
 	orderRepo repository.OrderRepository
 }
 
-func NewOrderService(orderRepo repository.OrderRepository) *OrderService {
-	return &OrderService{
+func NewOrderService(orderRepo repository.OrderRepository) *orderService {
+	return &orderService{
 		orderRepo: orderRepo,
 	}
 }
 
-func (d *OrderService) GetOrderByID(id int) (models.Order, error) {
+func (d *orderService) GetOrderByID(id int) (models.Order, error) {
 	if id <= 0 {
 		return models.Order{}, ErrIDIsNotValid
 	}

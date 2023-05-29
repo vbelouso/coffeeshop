@@ -21,10 +21,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	svc := service.NewOrderService(pg)
-	handler := controller.NewOrderHandler(svc)
+	orderService := service.NewOrderService(pg)
+	orderController := controller.NewOrderHandler(orderService)
 	router := mux.NewRouter()
-	router.HandleFunc("/orders/{id:[0-9]+}", handler.GetOrderByID).Methods(http.MethodGet)
+	router.HandleFunc("/orders/{id:[0-9]+}", orderController.GetOrderByID).Methods(http.MethodGet)
 	srv := &http.Server{
 		Addr:         cfg.ServerPort,
 		WriteTimeout: time.Second * 15,

@@ -10,15 +10,15 @@ import (
 	"github.com/vbelouso/coffeshop/internal/service"
 )
 
-type orderHandler struct {
-	service service.IOrderService
+type orderController struct {
+	service service.OrderService
 }
 
-func NewOrderHandler(service service.IOrderService) *orderHandler {
-	return &orderHandler{service: service}
+func NewOrderHandler(service service.OrderService) *orderController {
+	return &orderController{service: service}
 }
 
-func (h *orderHandler) GetOrderByID(w http.ResponseWriter, r *http.Request) {
+func (h *orderController) GetOrderByID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 64)
 	if err != nil || id < 1 {
 		http.Error(w, "The requested resource was not found.", http.StatusNotFound)
