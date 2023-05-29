@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/vbelouso/coffeshop/internal/config"
-	"github.com/vbelouso/coffeshop/internal/handler"
+	"github.com/vbelouso/coffeshop/internal/controller"
 	"github.com/vbelouso/coffeshop/internal/repository"
 	"github.com/vbelouso/coffeshop/internal/service"
 )
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	svc := service.NewOrderService(pg)
-	handler := handler.NewOrderHandler(svc)
+	handler := controller.NewOrderHandler(svc)
 	router := mux.NewRouter()
 	router.HandleFunc("/orders/{id:[0-9]+}", handler.GetOrderByID).Methods(http.MethodGet)
 	srv := &http.Server{
@@ -36,32 +36,3 @@ func main() {
 	log.Printf("Starting server on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
-
-//func openDB(dsn string) (*pgx.Conn, error) {
-//	conn, err := pgx.Connect(context.Background(), dsn)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	return conn, conn.Ping(context.Background())
-//}
-
-// func openDB(dsn string) (*pgxpool.Pool, error) {
-// 	ctx := context.Background()
-// 	config, err := pgxpool.ParseConfig(dsn)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to parse database configuration: %w", err)
-// 	}
-
-// 	pool, err := pgxpool.NewWithConfig(ctx, config)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to create database pool: %w", err)
-// 	}
-
-// 	err = pool.Ping(ctx)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to establish database connection: %w", err)
-// 	}
-
-// 	return pool, nil
-// }
