@@ -4,6 +4,6 @@ import (
 	"github.com/vbelouso/coffeshop/internal/models"
 )
 
-type IOrderRepository interface {
+type OrderRepository interface {
 	GetOrderByID(id int) (models.Order, error)
 }

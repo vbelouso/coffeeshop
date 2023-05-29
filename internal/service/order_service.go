@@ -13,10 +13,10 @@ var (
 )
 
 type OrderService struct {
-	orderRepo repository.IOrderRepository
+	orderRepo repository.OrderRepository
 }
 
-func NewOrderService(orderRepo repository.IOrderRepository) *OrderService {
+func NewOrderService(orderRepo repository.OrderRepository) *OrderService {
 	return &OrderService{
 		orderRepo: orderRepo,
 	}
